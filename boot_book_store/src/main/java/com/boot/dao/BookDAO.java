@@ -1,0 +1,17 @@
+package com.boot.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import com.boot.dto.BookDTO;
+
+@Mapper
+public interface BookDAO {
+    public void insertBook(BookDTO book);
+    public List<BookDTO> selectAllBooks();
+    public BookDTO selectBookById(int book_id);
+    public void updateBook(BookDTO book);
+    public void deleteBook(int book_id);
+    boolean existsById(int bookId);
+}
