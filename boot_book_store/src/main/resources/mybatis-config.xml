@@ -13,5 +13,6 @@
 		<mapper resource="mybatis/mappers/CartMapper.xml"/>
 		<mapper resource="mybatis/mappers/SearchDAO.xml"/>
 		<mapper resource="mybatis/mappers/User.xml"/>
+		<mapper resource="mybatis/mappers/WishlistMapper.xml"/>
 	</mappers>
 </configuration>
