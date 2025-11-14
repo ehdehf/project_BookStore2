@@ -5,8 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Mapper;
+
 import com.boot.dto.UserDTO;
 
+@Mapper
 public interface UserDAO {
 	public ArrayList<UserDTO> loginYn(HashMap<String, String> param);
 	public void register(HashMap<String, String> param);
