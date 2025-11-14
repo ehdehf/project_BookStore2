@@ -15,5 +15,7 @@
 		<mapper resource="mybatis/mappers/User.xml"/>
 		<mapper resource="mybatis/mappers/WishlistMapper.xml"/>
 		<mapper resource="mybatis/mappers/AdminMemberMapper.xml"/>
+		<mapper resource="mybatis/mappers/NoticeBoard.xml"/>
+		<mapper resource="mybatis/mappers/NoticeBoardAttach.xml"/>
 	</mappers>
 </configuration>
