@@ -446,4 +446,12 @@ public class ProjectController {
 		// /WEB-INF/views/search/search.jsp 로 forward
 		return "board";
 	}
+	@GetMapping("/admin/boardManagement")
+	public String boardManagement(HttpSession session) {
+		return "admin/boardManagement";
+	}
+	@GetMapping("/admin/qnaManagement")
+	public String qnaManagement(HttpSession session) {
+		return "admin/qnaManagement";
+	}
 }
