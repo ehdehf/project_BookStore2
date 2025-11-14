@@ -60,7 +60,15 @@ public class ProjectController {
 	// ------------------ 관리자 메인 ------------------
 	@GetMapping("/adminMain")
 	public String adminMain(HttpSession session) {
-		return "admin/adminMain";
+
+	    String role = (String) session.getAttribute("userRole");
+
+	    // 로그인 안 했거나 권한이 ADMIN이 아님 → 메인으로
+	    if (role == null || !role.equals("ADMIN")) {
+	        return "redirect:/main";
+	    }
+
+	    return "admin/adminMain";
 	}
 
 	// ------------------ 회원가입 ------------------
@@ -130,6 +138,9 @@ public class ProjectController {
             if (userInfo != null) {
                 String name = (String) userInfo.get("user_name");
                 session.setAttribute("loginDisplayName", name);
+                
+                session.setAttribute("userRole", userInfo.get("user_role"));
+
             }
 
             // 로그인 성공 후 메인으로 이동
@@ -467,7 +478,8 @@ public class ProjectController {
 		// /WEB-INF/views/search/search.jsp 로 forward
 		return "board";
 	}
-	//	관리자 화면에서 게시판을 불러옴
+	
+//	관리자 화면에서 게시판을 불러옴
 	@GetMapping("/admin/boardManagement")
 	public String boardManagement() {
 	    return "admin/boardManagement"; // list.jsp
