@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,11 +21,10 @@ public class AdminMemberController {
 
     private final AdminMemberService adminMemberService;
 
-    // ⭐ 관리자 회원목록 페이지
+    // ⭐ 관리자 회원 목록
     @GetMapping("/adminlist")
     public String adminList(Model model, HttpSession session) {
 
-        // ✔ 로그인 체크
         String loginId = (String) session.getAttribute("loginId");
         String userRole = (String) session.getAttribute("userRole");
 
@@ -31,10 +32,8 @@ public class AdminMemberController {
             return "redirect:/login";
         }
 
-//        // ✔ 관리자만 접근 가능
-//        if (!"ADMIN".equals(userRole)) {
-//            return "redirect:/main";
-//        }
+        // ADMIN 체크 (지금은 주석)
+        // if (!"ADMIN".equals(userRole)) return "redirect:/main";
 
         List<Map<String, Object>> members = adminMemberService.getAllMembers();
         model.addAttribute("members", members);
@@ -42,42 +41,51 @@ public class AdminMemberController {
         return "admin/memberList";
     }
 
-    // ⭐ 상세 보기
+    // ⭐ 페이지 이동용 상세페이지
     @GetMapping("/detail")
     public String detail(@RequestParam("user_id") String userId,
                          Model model,
                          HttpSession session) {
 
-//        if (!"ADMIN".equals(session.getAttribute("userRole"))) {
-//            return "redirect:/main";
-//        }
+        // if (!"ADMIN".equals(session.getAttribute("userRole"))) return "redirect:/main";
 
         Map<String, Object> member = adminMemberService.getMemberById(userId);
         model.addAttribute("member", member);
+
         return "admin/memberDetail";
     }
 
     // ⭐ 수정 처리
     @PostMapping("/edit")
-    public String edit(@RequestParam Map<String, Object> param, HttpSession session) {
-
-//        if (!"ADMIN".equals(session.getAttribute("userRole"))) {
-//            return "redirect:/main";
-//        }
+    @ResponseBody
+    public Map<String, Object> edit(@RequestBody Map<String, Object> param) {
 
         adminMemberService.updateMember(param);
-        return "redirect:/admin/member/adminlist";
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("status", "OK");
+        return result;
     }
 
-    // ⭐ 삭제 처리
+
     @GetMapping("/delete")
-    public String delete(@RequestParam("user_id") String userId, HttpSession session) {
-//
-//        if (!"ADMIN".equals(session.getAttribute("userRole"))) {
-//            return "redirect:/main";
-//        }
+    public String delete(@RequestParam("user_id") String userId,
+                         HttpSession session) {
 
+        // if (!"ADMIN".equals(session.getAttribute("userRole"))) {
+        //     return "redirect:/main";
+        // }
+
+        log.info("delete userId = {}", userId);
         adminMemberService.deleteMember(userId);
+
         return "redirect:/admin/member/adminlist";
     }
+ // ⭐ 상세 정보 JSON 제공 (SPA용)
+    @GetMapping("/detailData")
+    @ResponseBody
+    public Map<String, Object> detailData(@RequestParam("user_id") String userId) {
+        return adminMemberService.getMemberById(userId);
+    }
+
 }
