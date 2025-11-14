@@ -24,7 +24,11 @@
         </div>
 
         <!-- 공지사항 글쓰기 버튼 -->
-        <a href="/admin/notice/write" class="write-btn">공지 등록</a>
+		<button type="button"
+		        class="write-btn"
+		        onclick="loadPage('/admin/notice/write')">
+		    공지 등록
+		</button>
       </div>
 
       <!-- 공지 목록 테이블 -->
@@ -51,7 +55,9 @@
                   <tr>
                     <td>${notice.noticeNo}</td>
                     <td>
-                      <a href="${pageContext.request.contextPath}/admin/notice/detail?noticeNo=${notice.noticeNo}">
+<!--                      <a href="${pageContext.request.contextPath}/admin/notice/detail?noticeNo=${notice.noticeNo}">-->
+					  <a href="javascript:void(0)"
+					  	 onclick="loadPage('${pageContext.request.contextPath}/admin/notice/detail?noticeNo=${notice.noticeNo}')">
                         <c:out value="${notice.noticeTitle}" />
                       </a>
                     </td>
@@ -68,7 +74,7 @@
 
       <!-- 검색 영역 -->
       <div class="board-search">
-        <form method="get" action="${pageContext.request.contextPath}/noticeManagement" id="searchForm">
+        <form method="get" id="searchForm">
           <select name="type" style="padding: 12px; border: 2px solid #eee; border-radius: 12px; font-size: 14px; margin-right: 8px;">
             <option value="tc" ${type == 'tc' ? 'selected' : ''}>제목+내용</option>
             <option value="title" ${type == 'title' ? 'selected' : ''}>제목</option>
@@ -83,20 +89,42 @@
       <!-- 페이지네이션 -->
       <div class="pagination">
         <c:if test="${startPage > 1}">
-          <a href="${pageContext.request.contextPath}/noticeManagement?page=${startPage-1}"><</a>
+			<a href="javascript:void(0)"
+	           onclick="loadPage('${pageContext.request.contextPath}/admin/noticeManagement?page=${startPage-1}')">
+	            <
+	        </a>
         </c:if>
 
         <c:forEach var="i" begin="${startPage}" end="${endPage}">
-          <a href="${pageContext.request.contextPath}/noticeManagement?page=${i}" class="${i == page ? 'active' : ''}">${i}</a>
+			<a href="javascript:void(0)"
+			   onclick="loadPage('${pageContext.request.contextPath}/admin/noticeManagement?page=${i}')"
+			   class="${i == page ? 'active' : ''}">${i}
+			</a>
         </c:forEach>
 
         <c:if test="${endPage < pageCount}">
-          <a href="${pageContext.request.contextPath}/noticeManagement?page=${endPage+1}">></a>
+			<a href="javascript:void(0)"
+			   onclick="loadPage('${pageContext.request.contextPath}/admin/noticeManagement?page=${endPage+1}')">
+			    >
+			</a>
         </c:if>
       </div>
     </div>
   </section>
+  <script>
+  document.getElementById("searchForm").addEventListener("submit", function(e) {
+      e.preventDefault(); // 기존 submit 막기
 
+      const type = this.type.value;
+      const keyword = this.keyword.value;
+
+      const url = "${pageContext.request.contextPath}/admin/noticeManagement"
+                  + "?type=" + encodeURIComponent(type)
+                  + "&keyword=" + encodeURIComponent(keyword);
+
+      loadPage(url); // 비동기로 페이지 로드
+  });
+  </script>
 </body>
 </html>
 
