@@ -66,8 +66,12 @@
         <div class="nav-section">
           <div class="nav-section-title">주문내역</div>
           <ul class="nav-list">
-            <li class="nav-item"><button>전체 주문내역</button></li>
-            <li class="nav-item"><button>오늘 주문내역</button></li>
+             <li class="nav-item">
+				<button data-page="/admin/order/list">전체 주문내역</button>
+			</li>
+            <li class="nav-item">
+				<button data-page="/admin/order/today">오늘 주문내역</button>
+			</li>
           </ul>
         </div>
 
@@ -377,6 +381,7 @@
   </script>
 </body>
 </html>
+
 
 
 
