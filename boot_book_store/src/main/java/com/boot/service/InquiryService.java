@@ -22,7 +22,14 @@ public interface InquiryService {
     
     // 답변 작성
     int createReply(InquiryReplyDTO reply);
+
+    // 답변 수정 (reply_id로)
+    int updateReply(InquiryReplyDTO reply);
+    
+    // inquiry_id로 답변 조회
+    InquiryReplyDTO getReplyByInquiryId(int inquiryId);
     
     // 문의 삭제
     int deleteInquiry(int inquiryId);
+
 }
