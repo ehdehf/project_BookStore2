@@ -13,10 +13,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.boot.dao.BookBuyDAO;
+import com.boot.dao.OrderDAO;
 import com.boot.dao.SearchDAO;
 import com.boot.dao.UserReviewDAO;
-import com.boot.dto.BookBuyDTO;
+import com.boot.dto.OrderDTO;
 import com.boot.dto.SearchDTO;
 import com.boot.dto.UserReviewDTO;
 
@@ -83,10 +83,11 @@ public class SearchController {
         boolean hasPurchased = false;
         boolean hasReviewed = false;
         if (userId != null) {
-            BookBuyDAO bookBuyDAO = sqlSession.getMapper(BookBuyDAO.class);
-            List<BookBuyDTO> purchaseList = bookBuyDAO.selectPurchaseListByUserId(userId);
+            OrderDAO orderDAO = sqlSession.getMapper(OrderDAO.class);
+            List<OrderDTO> purchaseList = orderDAO.selectPurchaseListByUserId(userId);
             hasPurchased = purchaseList.stream()
-                                        .anyMatch(p -> p.getBook_id() == book_id);
+            	    .flatMap(order -> order.getOrderDetails().stream()) // 주문별 상세 펼침
+            	    .anyMatch(detail -> detail.getBook_id() == book_id);
             // ▼ 리뷰 작성 여부 확인 (여기 추가)
             int reviewCount = reviewDAO.countUserReviewByBook(userId, (long)book_id);
             hasReviewed = reviewCount > 0;
