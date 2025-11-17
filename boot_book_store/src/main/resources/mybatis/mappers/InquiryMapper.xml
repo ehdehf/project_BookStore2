@@ -14,7 +14,7 @@
         VALUES (#{inquiry_id}, #{user_id}, #{title}, #{content}, '대기중', SYSDATE, SYSDATE)
     </insert>
 
-    <!-- 사용자별 문의 목록 조회 -->
+    <!-- 사용자별 문의 목록 조회 - 최신 답변만 -->
     <select id="selectInquiryByUserId" parameterType="string" resultMap="inquiryResultMap">
         SELECT 
             i.inquiry_id,
@@ -30,12 +30,20 @@
             r.created_date as reply_date
         FROM inquiry i
         LEFT JOIN users u ON i.user_id = u.user_id
-        LEFT JOIN inquiry_reply r ON i.inquiry_id = r.inquiry_id
+        LEFT JOIN (
+            SELECT inquiry_id, reply_id, reply_content, created_date
+            FROM (
+                SELECT inquiry_id, reply_id, reply_content, created_date,
+                       ROW_NUMBER() OVER (PARTITION BY inquiry_id ORDER BY reply_id DESC) as rn
+                FROM inquiry_reply
+            )
+            WHERE rn = 1
+        ) r ON i.inquiry_id = r.inquiry_id
         WHERE i.user_id = #{user_id}
         ORDER BY i.created_date DESC
     </select>
 
-    <!-- 문의 상세 조회 (답변 포함) -->
+    <!-- 문의 상세 조회 (답변 포함) - 최신 답변만 -->
     <select id="selectInquiryById" parameterType="int" resultMap="inquiryResultMap">
         SELECT 
             i.inquiry_id,
@@ -52,11 +60,23 @@
             r.admin_id
         FROM inquiry i
         LEFT JOIN users u ON i.user_id = u.user_id
-        LEFT JOIN inquiry_reply r ON i.inquiry_id = r.inquiry_id
+        LEFT JOIN (
+            SELECT * FROM (
+                SELECT 
+                    inquiry_id,
+                    reply_id,
+                    reply_content,
+                    created_date,
+                    admin_id
+                FROM inquiry_reply
+                WHERE inquiry_id = #{inquiry_id}
+                ORDER BY reply_id DESC
+            ) WHERE ROWNUM = 1
+        ) r ON i.inquiry_id = r.inquiry_id
         WHERE i.inquiry_id = #{inquiry_id}
     </select>
 
-    <!-- 관리자용: 전체 문의 목록 조회 -->
+    <!-- 관리자용: 전체 문의 목록 조회 - 최신 답변만 -->
     <select id="selectAllInquiries" resultMap="inquiryResultMap">
         SELECT 
             i.inquiry_id,
@@ -72,7 +92,15 @@
             r.created_date as reply_date
         FROM inquiry i
         LEFT JOIN users u ON i.user_id = u.user_id
-        LEFT JOIN inquiry_reply r ON i.inquiry_id = r.inquiry_id
+        LEFT JOIN (
+            SELECT inquiry_id, reply_id, reply_content, created_date
+            FROM (
+                SELECT inquiry_id, reply_id, reply_content, created_date,
+                       ROW_NUMBER() OVER (PARTITION BY inquiry_id ORDER BY reply_id DESC) as rn
+                FROM inquiry_reply
+            )
+            WHERE rn = 1
+        ) r ON i.inquiry_id = r.inquiry_id
         ORDER BY i.created_date DESC
     </select>
 
@@ -101,6 +129,29 @@
         INSERT INTO inquiry_reply (reply_id, inquiry_id, admin_id, reply_content, created_date)
         VALUES (#{reply_id}, #{inquiry_id}, #{admin_id}, #{reply_content}, SYSDATE)
     </insert>
+
+    <!-- 답변 수정 (reply_id로) -->
+    <update id="updateReply" parameterType="com.boot.dto.InquiryReplyDTO">
+        UPDATE inquiry_reply
+        SET reply_content = #{reply_content},
+            admin_id = #{admin_id}
+        WHERE reply_id = #{reply_id}
+    </update>
+
+    <!-- inquiry_id로 답변 조회 (최신 답변 1개만) -->
+    <select id="selectReplyByInquiryId" parameterType="int" resultType="com.boot.dto.InquiryReplyDTO">
+        SELECT * FROM (
+            SELECT 
+                reply_id,
+                inquiry_id,
+                admin_id,
+                reply_content,
+                created_date
+            FROM inquiry_reply
+            WHERE inquiry_id = #{inquiry_id}
+            ORDER BY reply_id DESC
+        ) WHERE ROWNUM = 1
+    </select>
 
     <!-- 문의 상태 업데이트 -->
     <update id="updateInquiryStatus">
