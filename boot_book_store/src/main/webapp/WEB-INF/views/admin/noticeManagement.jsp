@@ -79,7 +79,6 @@
             <option value="tc" ${type == 'tc' ? 'selected' : ''}>제목+내용</option>
             <option value="title" ${type == 'title' ? 'selected' : ''}>제목</option>
             <option value="content" ${type == 'content' ? 'selected' : ''}>내용</option>
-            <option value="writer" ${type == 'writer' ? 'selected' : ''}>작성자</option>
           </select>
           <input type="text" name="keyword" class="search-input" placeholder="검색어를 입력하세요" value="${param.keyword}">
           <button type="submit" class="search-btn">검색</button>
@@ -127,4 +126,5 @@
   </script>
 </body>
 </html>
+
 
