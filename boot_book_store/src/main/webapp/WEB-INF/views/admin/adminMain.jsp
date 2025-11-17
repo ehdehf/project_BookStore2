@@ -305,6 +305,40 @@
 	    });
 	}
 
+	/**********************************************************
+	 * 📌 도서 등록 — saveBookAdd()
+	 **********************************************************/
+	function saveBookAdd() {
+
+	  const data = {
+	    book_title: document.querySelector("input[name='book_title']").value,
+	    book_writer: document.querySelector("input[name='book_writer']").value,
+	    book_pub: document.querySelector("input[name='book_pub']").value,
+	    book_date: document.querySelector("input[name='book_date']").value,
+	    genre_id: document.querySelector("select[name='genre_id']").value,
+	    book_price: document.querySelector("input[name='book_price']").value,
+	    book_count: document.querySelector("input[name='book_count']").value,
+	    book_comm: document.querySelector("textarea[name='book_comm']").value,
+	    book_isbn: document.querySelector("input[name='book_isbn']").value,
+	    book_image_path: document.querySelector("input[name='book_image_path']").value
+	  };
+
+	  fetch("/admin/book/add", {
+	    method: "POST",
+	    headers: {"Content-Type": "application/json"},
+	    body: JSON.stringify(data)
+	  })
+	    .then(res => res.text())
+	    .then(result => {
+	      alert("도서 등록 완료!");
+	      loadPage("/admin/book/list");
+	    })
+	    .catch(err => {
+	      console.error(err);
+	      alert("등록 중 오류 발생");
+	    });
+	}
+
 
 	/**********************************************************
 	 * 📌 도서 삭제 — deleteBook()
@@ -343,6 +377,7 @@
   </script>
 </body>
 </html>
+
 
 
 
