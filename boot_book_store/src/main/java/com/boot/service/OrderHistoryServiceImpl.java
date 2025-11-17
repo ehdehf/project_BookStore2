@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.boot.dao.OrderHistoryDAO;
 import com.boot.dto.OrderHistoryDetailDTO;
+import com.boot.dto.OrderHistoryItemDTO;
 import com.boot.dto.OrderHistoryListDTO;
 
 import java.util.List;
@@ -28,7 +29,9 @@ public class OrderHistoryServiceImpl implements OrderHistoryService {
     @Override
     public OrderHistoryDetailDTO getOrderDetail(int order_id) {
         OrderHistoryDetailDTO info = orderHistoryDAO.getOrderInfo(order_id);
-        info.setItems(orderHistoryDAO.getOrderItems(order_id));
+        List<OrderHistoryItemDTO> items = orderHistoryDAO.getOrderItems(order_id);
+        
+        info.setItems(items);
         return info;
     }
 
