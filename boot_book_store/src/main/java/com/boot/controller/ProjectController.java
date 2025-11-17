@@ -50,6 +50,8 @@ public class ProjectController {
     @Autowired
     private CartDAO cartDAO;
     @Autowired
+    private OrderDAO orderDAO;
+    @Autowired
     private OrderDetailDAO orderDetailDAO;
     @Autowired
     private OrderDetailService orderDetailService;
