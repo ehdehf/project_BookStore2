@@ -56,6 +56,25 @@ public class InquiryServiceImpl implements InquiryService {
 
     @Override
     @Transactional
+    public int updateReply(InquiryReplyDTO reply) {
+        // 답변 수정 (reply_id로)
+        int result = inquiryDAO.updateReply(reply);
+        
+        // 문의 상태를 '답변완료'로 유지
+        if (result > 0) {
+            inquiryDAO.updateInquiryStatus(reply.getInquiry_id(), "답변완료");
+        }
+        
+        return result;
+    }
+
+    @Override
+    public InquiryReplyDTO getReplyByInquiryId(int inquiryId) {
+        return inquiryDAO.selectReplyByInquiryId(inquiryId);
+    }
+
+    @Override
+    @Transactional
     public int deleteInquiry(int inquiryId) {
         return inquiryDAO.deleteInquiry(inquiryId);
     }
