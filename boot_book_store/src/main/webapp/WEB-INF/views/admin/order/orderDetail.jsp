@@ -1,171 +1,287 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>주문 상세보기</title>
+<meta charset="UTF-8">
+<title>주문 상세보기</title>
 
-    <style>
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-            background: #f2eee9;
-            margin: 0;
-            padding: 0 0 40px 0;
-        }
+<style>
+    body {
+        font-family: 'Noto Sans KR', sans-serif;
+        background: #f6f7f9;
+        margin: 0;
+        padding: 0;
+    }
 
-        .title {
-            font-size: 32px;
-            font-weight: 700;
-            margin: 40px 0 20px 8%;
-            color: #3e2c1c;
-        }
+    .page-title {
+        font-size: 26px;
+        font-weight: 700;
+        margin: 30px 0 10px 40px;
+        color: #333;
+    }
 
-        .detail-container {
-            width: 85%;
-            margin: 0 auto;
-            background: #ffffff;
-            border-radius: 16px;
-            padding: 24px 32px 32px 32px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-        }
+    .wrapper {
+        width: 90%;
+        margin: 0 auto;
+    }
 
-        h2 {
-            font-size: 20px;
-            margin: 16px 0 8px 0;
-            color: #5a412b;
-        }
+    /* 상단 요약 카드 영역 */
+    .summary-grid {
+        display: flex;
+        gap: 20px;
+        margin-top: 20px;
+    }
 
-        .section {
-            margin-top: 16px;
-            border-top: 1px solid #ece4d9;
-            padding-top: 12px;
-        }
+    .summary-card {
+        flex: 1;
+        background: white;
+        padding: 22px 28px;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.07);
+    }
 
-        .field-row {
-            display: flex;
-            margin-bottom: 8px;
-        }
+    .summary-title {
+        font-size: 14px;
+        color: #777;
+    }
 
-        .field-label {
-            width: 140px;
-            font-weight: 600;
-            color: #6b4f34;
-        }
+    .summary-value {
+        font-size: 24px;
+        font-weight: 600;
+        color: #333;
+        margin-top: 4px;
+    }
 
-        .field-value {
-            flex: 1;
-            color: #4b3b2a;
-        }
+    /* 세부 박스 */
+    .section-box {
+        background: #fff;
+        margin-top: 25px;
+        padding: 25px 35px;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
 
-        .book-info {
-            display: flex;
-            gap: 24px;
-        }
+    .section-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 18px;
+        color: #333;
+    }
 
-        .book-image {
-            width: 120px;
-            height: 160px;
-            background: #f2eee9;
-            border-radius: 8px;
-            overflow: hidden;
-            flex-shrink: 0;
-        }
+    .info-row {
+        display: flex;
+        margin-bottom: 12px;
+    }
 
-        .book-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+    .info-label {
+        width: 150px;
+        font-weight: 600;
+        color: #555;
+    }
 
-        .btn-back {
-            margin-top: 20px;
-            padding: 8px 18px;
-            border: none;
-            border-radius: 6px;
-            background: #795438;
-            color: white;
-            font-size: 14px;
-            cursor: pointer;
-        }
+    .info-value {
+        flex: 1;
+        color: #222;
+    }
 
-        .btn-back:hover {
-            background: #8a6141;
-        }
-    </style>
+    /* 도서 목록 */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+    table th {
+        background: #fafafa;
+        padding: 12px;
+        font-size: 14px;
+        color: #555;
+        border-bottom: 1px solid #e3e3e3;
+    }
+
+    table td {
+        padding: 12px;
+        border-bottom: 1px solid #ececec;
+        font-size: 14px;
+        color: #333;
+    }
+
+    .book-img {
+        width: 65px;
+        height: 85px;
+        border-radius: 6px;
+        object-fit: cover;
+        border: 1px solid #ddd;
+    }
+
+    /* 버튼 */
+    .btn-back {
+        margin-top: 25px;
+        padding: 10px 20px;
+        background: #4a6fa5;
+        border: none;
+        color: white;
+        font-size: 14px;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    .btn-back:hover {
+        background: #3d5e8e;
+    }
+	/* 이미지 열: 가운데 */
+	table td:nth-child(1),
+	table th:nth-child(1) {
+	    text-align: center;
+	}
+
+	/* 도서명: 왼쪽 */
+	table td:nth-child(2),
+	table th:nth-child(2) {
+	    text-align: left;
+	}
+
+	/* 저자: 가운데 */
+	table td:nth-child(3),
+	table th:nth-child(3) {
+	    text-align: center;
+	}
+
+	/* 수량: 가운데 */
+	table td:nth-child(4),
+	table th:nth-child(4) {
+	    text-align: center;
+	}
+
+	/* 판매가: 오른쪽 출력이 자연스럽다 */
+	table td:nth-child(5),
+	table th:nth-child(5) {
+	    text-align: right;
+	}
+
+	/* 배송비: 오른쪽 */
+	table td:nth-child(6),
+	table th:nth-child(6) {
+	    text-align: right;
+	}
+</style>
 </head>
 
 <body>
 
-	<!-- 주문 기본 정보 -->
-	<div class="table-container" style="padding: 30px;">
-	    <table style="width:50%; margin-bottom: 30px;">
-	        <tr>
-	            <th style="width:35%;">주문번호</th>
-	            <td>${order.order_id}</td>
-	        </tr>
-	        <tr>
-	            <th>회원 ID</th>
-	            <td>${order.user_id}</td>
-	        </tr>
-	        <tr>
-	            <th>회원명</th>
-	            <td>${order.user_name}</td>
-	        </tr>
-	        <tr>
-	            <th>이메일</th>
-	            <td>${order.user_email}</td>
-	        </tr>
-	        <tr>
-	            <th>총 수량</th>
-	            <td>${order.total_quantity}</td>
-	        </tr>
-	        <tr>
-	            <th>총 금액</th>
-	            <td><fmt:formatNumber value="${order.total_price}" /></td>
-	        </tr>
-	        <tr>
-	            <th>배송비</th>
-	            <td><fmt:formatNumber value="${order.shipping_fee}" /></td>
-	        </tr>
-	        <tr>
-	            <th>주문일</th>
-	            <td>${order.order_date}</td>
-	        </tr>
-	    </table>
+<div class="page-title">주문 상세보기</div>
 
-	    <!-- 뒤로가기 -->
-	    <button class="btn-detail" onclick="loadPage('/admin/order/list')">전체 주문 목록으로</button>
-	</div>
+<div class="wrapper">
+
+    <!-- 주문 상단 요약 -->
+    <div class="summary-grid">
+        <div class="summary-card">
+            <div class="summary-title">주문번호</div>
+            <div class="summary-value">${order.order_id}</div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-title">총 수량</div>
+            <div class="summary-value">${order.total_quantity}</div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-title">총 금액</div>
+            <div class="summary-value"><fmt:formatNumber value="${order.total_price}" /></div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-title">주문일</div>
+            <div class="summary-value">${order.order_date}</div>
+        </div>
+    </div>
 
 
-	<!-- 주문 상세 리스트 -->
-	<div class="table-container">
-	    <table>
-	        <thead>
-	        <tr>
-	            <th>책번호</th>
-	            <th>도서명</th>
-	            <th>저자</th>
-	            <th>수량</th>
-	            <th>판매가</th>
-	        </tr>
-	        </thead>
+    <!-- 주문자 정보 -->
+    <div class="section-box">
+        <div class="section-title">주문자 정보</div>
 
-	        <tbody>
-	        <c:forEach var="item" items="${order.items}">
-	            <tr>
-	                <td>${item.book_id}</td>
-	                <td>${item.book_title}</td>
-	                <td>${item.book_writer}</td>
-	                <td>${item.quantity}</td>
-	                <td><fmt:formatNumber value="${item.purchase_price}" /></td>
-	            </tr>
-	        </c:forEach>
-	        </tbody>
-	    </table>
-	</div>
+        <div class="info-row">
+            <div class="info-label">회원 ID</div>
+            <div class="info-value">${order.user_id}</div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">회원명</div>
+            <div class="info-value">${order.user_name}</div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">이메일</div>
+            <div class="info-value">${order.user_email}</div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">전화번호</div>
+            <div class="info-value">${order.user_phone_num}</div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">주소</div>
+            <div class="info-value">${order.user_address}</div>
+        </div>
+
+        <div class="info-row">
+            <div class="info-label">상세 주소</div>
+            <div class="info-value">${order.user_detail_address}</div>
+        </div>
+		<div class="info-row">
+		    <div class="info-label">배송비</div>
+		    <div class="info-value">
+		        <c:choose>
+		            <c:when test="${order.shipping_fee == 0}">
+		                무료배송
+		            </c:when>
+		            <c:otherwise>
+		                <fmt:formatNumber value="${order.shipping_fee}" /> 원
+		            </c:otherwise>
+		        </c:choose>
+		    </div>
+		</div>
+    </div>
+
+
+    <!-- 도서 목록 -->
+    <div class="section-box">
+        <div class="section-title">주문 도서 목록</div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>이미지</th>
+                    <th>도서명</th>
+                    <th>저자</th>
+                    <th>수량</th>
+                    <th>판매가</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            <c:forEach var="item" items="${order.items}">
+                <tr>
+                    <td><img src="${item.book_image_path}" class="book-img"></td>
+                    <td>${item.book_title}</td>
+                    <td>${item.book_writer}</td>
+                    <td>${item.quantity}</td>
+                    <td><fmt:formatNumber value="${item.purchase_price}" /></td>
+                </tr>
+            </c:forEach>
+            </tbody>
+        </table>
+    </div>
+
+
+    <!-- 뒤로가기 -->
+    <button class="btn-back" onclick="loadPage('/admin/order/list')">← 주문 목록으로</button>
+
 </div>
 
 </body>
