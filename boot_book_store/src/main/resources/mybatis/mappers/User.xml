@@ -5,6 +5,7 @@
 
 <mapper namespace="com.boot.dao.UserDAO">
 
+  <select id="findNicknameByUserId" resultType="String" parameterType="String"> SELECT user_nickname FROM users WHERE user_id = #{userId} </select>
   <select id="loginYn" parameterType="hashmap" resultType="string">
         select user_pw from users where user_id=#{user_id}
   </select>
