@@ -140,6 +140,22 @@
       background-color: #4338CA;
     }
 
+    .btn-back {
+      background-color: #E5E7EB;
+      color: #374151;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .btn-back:hover {
+      background-color: #D1D5DB;
+    }
+
     .existing-reply {
       background-color: #F0FDF4;
       border: 1px solid #BBF7D0;
@@ -168,22 +184,6 @@
       background-color: #D1FAE5;
       color: #065F46;
       border: 1px solid #A7F3D0;
-    }
-
-    .btn-back {
-      background-color: #E5E7EB;
-      color: #374151;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    .btn-back:hover {
-      background-color: #D1D5DB;
     }
   </style>
 </head>
@@ -219,7 +219,7 @@
       <section class="content">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
           <h1 style="font-size:18px;margin:0;">문의 상세</h1>
-          <a href="<c:url value='/inquiry/admin/list'/>" class="btn-back">목록으로</a>
+          <button onclick="loadPage('/inquiry/admin/list')" class="btn-back">목록으로</button>
         </div>
 
         <c:if test="${not empty msg}">
@@ -249,28 +249,28 @@
               <h2>답변 작성</h2>
             </div>
 
-            <c:if test="${not empty inquiry.reply}">
-              <div class="existing-reply">
-                <div class="existing-reply-content">${inquiry.reply.reply_content}</div>
+            <c:if test="${not empty inquiry.reply and not empty inquiry.reply.reply_content}">
+              <div class="existing-reply" id="existingReplyBox">
+                <div class="existing-reply-content" id="existingReplyContent">${inquiry.reply.reply_content}</div>
                 <div class="existing-reply-meta">
                   답변일: <fmt:formatDate value="${inquiry.reply.created_date}" pattern="yyyy-MM-dd HH:mm" />
                 </div>
               </div>
             </c:if>
 
-            <form action="<c:url value='/inquiry/admin/reply'/>" method="post" class="reply-form">
+            <form id="replyForm" class="reply-form">
               <input type="hidden" name="inquiry_id" value="${inquiry.inquiry_id}">
               
               <div class="form-group">
                 <label for="reply_content">답변 내용 *</label>
                 <textarea id="reply_content" name="reply_content" required 
-                          placeholder="고객 문의에 대한 답변을 작성해주세요.">${inquiry.reply.reply_content}</textarea>
+                          placeholder="고객 문의에 대한 답변을 작성해주세요."><c:if test="${not empty inquiry.reply and not empty inquiry.reply.reply_content}">${inquiry.reply.reply_content}</c:if></textarea>
               </div>
 
               <div class="form-actions">
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary" id="submitBtn">
                   <c:choose>
-                    <c:when test="${not empty inquiry.reply}">답변 수정</c:when>
+                    <c:when test="${not empty inquiry.reply and not empty inquiry.reply.reply_content}">답변 수정</c:when>
                     <c:otherwise>답변 등록</c:otherwise>
                   </c:choose>
                 </button>
@@ -281,5 +281,88 @@
       </section>
     </main>
   </div>
+
+  <script>
+    // 답변 폼 제출 처리 (AJAX) - 즉시 실행
+    (function() {
+      function initReplyForm() {
+        const form = document.getElementById('replyForm');
+        if (!form) {
+          console.error('replyForm을 찾을 수 없습니다.');
+          return;
+        }
+        
+        // 이미 이벤트 리스너가 등록되어 있으면 제거
+        if (form._replyFormHandler) {
+          form.removeEventListener('submit', form._replyFormHandler);
+        }
+        
+        // 새 이벤트 핸들러 생성
+        form._replyFormHandler = function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+          
+          console.log('폼 제출 이벤트 발생');
+          
+          const formData = new FormData(this);
+          const inquiryId = formData.get('inquiry_id');
+          const replyContent = formData.get('reply_content');
+          
+          if (!replyContent || replyContent.trim() === '') {
+            alert('답변 내용을 입력해주세요.');
+            return false;
+          }
+          
+          console.log('답변 제출:', {
+            inquiry_id: inquiryId,
+            reply_content: replyContent
+          });
+          
+          fetch('/inquiry/admin/reply', {
+            method: 'POST',
+            body: formData
+          })
+          .then(res => {
+            console.log('응답 상태:', res.status);
+            if (!res.ok) {
+              throw new Error('HTTP error! status: ' + res.status);
+            }
+            return res.text();
+          })
+          .then(result => {
+            console.log('서버 응답: ', result);
+            if (result.trim() === 'SUCCESS') {
+              alert('답변이 등록되었습니다.');
+              // 캐시 방지를 위해 타임스탬프 추가하여 문의 리스트 다시 로드
+              if (typeof loadPage === 'function') {
+                loadPage('/inquiry/admin/list?t=' + new Date().getTime());
+              } else {
+                window.location.href = '/inquiry/admin/list';
+              }
+            } else {
+              alert('답변 등록에 실패했습니다. 응답: ' + result);
+            }
+          })
+          .catch(err => {
+            console.error('에러:', err);
+            alert('오류가 발생했습니다: ' + err.message);
+          });
+          
+          return false;
+        };
+        
+        form.addEventListener('submit', form._replyFormHandler);
+        console.log('폼 이벤트 리스너 등록됨');
+      }
+      
+      // 즉시 실행
+      initReplyForm();
+      
+      // 약간의 지연 후에도 실행 (동적 로드 대응)
+      setTimeout(initReplyForm, 100);
+      setTimeout(initReplyForm, 500);
+    })();
+  </script>
 </body>
 </html>
