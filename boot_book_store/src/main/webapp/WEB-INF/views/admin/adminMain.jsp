@@ -266,9 +266,79 @@
 	    });
 	}
 
+	/**********************************************************
+	 * 📌 도서 수정 — saveBookEdit()
+	 **********************************************************/
+	function saveBookEdit() {
+
+	  const data = {
+	    book_id: document.querySelector("input[name='book_id']").value,
+	    book_title: document.querySelector("input[name='book_title']").value,
+	    book_writer: document.querySelector("input[name='book_writer']").value,
+	    book_pub: document.querySelector("input[name='book_pub']").value,
+	    book_date: document.querySelector("input[name='book_date']").value,
+	    genre_id: document.querySelector("select[name='genre_id']").value,
+	    book_price: document.querySelector("input[name='book_price']").value,
+	    book_count: document.querySelector("input[name='book_count']").value,
+	    book_comm: document.querySelector("textarea[name='book_comm']").value,
+	    book_isbn: document.querySelector("input[name='book_isbn']").value,
+	    book_image_path: document.querySelector("input[name='book_image_path']").value
+	  };
+
+	  fetch("/admin/book/edit", {
+	    method: "POST",
+	    headers: {"Content-Type": "application/json"},
+	    body: JSON.stringify(data)
+	  })
+	    .then(res => res.text())
+	    .then(result => {
+	      alert("도서 수정 완료!");
+	      loadPage("/admin/book/list");
+	    })
+	    .catch(err => {
+	      console.error(err);
+	      alert("수정 중 오류 발생");
+	    });
+	}
+
+
+	/**********************************************************
+	 * 📌 도서 삭제 — deleteBook()
+	 **********************************************************/
+	function deleteBook(id) {
+
+	  if (!confirm("정말 삭제하시겠습니까?")) return;
+
+	  fetch("/admin/book/delete?id=" + id, { method: "POST" })
+	    .then(res => res.text())
+	    .then(result => {
+	      if (result.trim() === "OK") {
+	        alert("도서 삭제 완료!");
+	        loadPage("/admin/book/list");
+	      } else {
+	        alert("삭제 실패: " + result);
+	      }
+	    })
+	    .catch(err => {
+	      console.error(err);
+	      alert("서버 오류 발생");
+	    });
+	}
+
+
+	/*******************************************
+	 * 📌 왼쪽 메뉴 버튼 → loadPage() 연결
+	 *******************************************/
+	document.querySelectorAll('.nav-item button').forEach(btn => {
+	  btn.addEventListener("click", () => {
+	    const page = btn.dataset.page;
+	    if (page) loadPage(page);
+	  });
+	});
 	
   </script>
 </body>
 </html>
+
 
 
