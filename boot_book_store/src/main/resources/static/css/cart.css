@@ -95,9 +95,39 @@ header{ position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px s
 .btn-ghost:hover{ border-color:#d3d3d3; }
 .fine{ font-size:12px; color:var(--muted); }
 
+.btn-tosspay {
+  background-color: #007bff; /* 파란색 */
+  color: #ffffff; /* 흰색 */
+  border: none;
+  font-weight: 700;
+  padding: 12px 0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.btn-tosspay:hover {
+  background-color: #0056b3;
+  color: #ffffff;
+}
+
 /* 하단 CTA */
-.cart-ctas{ display:flex; gap:10px; }
+.cart-ctas {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
 .cta-full{ width:100%; }
+
+.btn-row {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  flex: 1 1 0;
+}
 
 /* 빈 상태 */
 .empty{ padding:36px; text-align:center; color:var(--muted); }

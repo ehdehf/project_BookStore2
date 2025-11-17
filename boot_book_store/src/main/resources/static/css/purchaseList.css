@@ -245,3 +245,7 @@ header{ position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px s
 .pagination-btn span {
   font-weight: bold;
 }
+
+.clickable-row {
+  cursor: pointer;
+}
