@@ -121,6 +121,7 @@ public class OAuthController {
                 session.setAttribute("loginId", existing.getUser_id());
                 session.setAttribute("loginDisplayName", existing.getUser_name());
                 session.setAttribute("loginType", existingType);
+                session.setAttribute("userRole", existing.getUser_role());
                 return "redirect:/main";
             } else {
                 // 다른 플랫폼이거나 일반회원 → 로그인 차단
