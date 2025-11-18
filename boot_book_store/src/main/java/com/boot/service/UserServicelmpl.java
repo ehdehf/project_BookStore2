@@ -48,13 +48,13 @@ public class UserServicelmpl implements UserService {
     
     public int withdraw(Map<String, String> param) {
         // 비번 일치하면 1, 아니면 0
-        return sqlSession.delete(
+        return sqlSession.update(
             "com.boot.dao.UserDAO.withdraw", param);
     }
 
     @Override
     public int withdrawSocial(Map<String, Object> param) {
-    	return sqlSession.delete(
+    	return sqlSession.update(
             "com.boot.dao.UserDAO.withdrawSocial", param);
     }
     
@@ -96,5 +96,16 @@ public class UserServicelmpl implements UserService {
     public void insertSocialUser(Map<String, String> param) {
         sqlSession.insert("com.boot.dao.UserDAO.insertSocialUser", param);
     }
+
+    // 소셜 계정 재활성화
+    @Override
+    public void reactivateSocialUser(Map<String, Object> map) {
+        sqlSession.update("com.boot.dao.UserDAO.reactivateSocialUser", map);
+    }
+
+	@Override
+	public UserDTO getInactiveUser(String userId) {
+		return sqlSession.selectOne("com.boot.dao.UserDAO.getInactiveUser", userId);
+	}
 }
 
