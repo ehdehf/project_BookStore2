@@ -127,5 +127,76 @@
             </div>
         </div>
     </div>
+
+<script>
+// 페이지 로드 시 회원 정보 가져오기 (AJAX 로드 대응)
+(function() {
+    // URL에서 user_id 파라미터 추출 (직접 접근 또는 AJAX 로드 모두 대응)
+    let userId = null;
+    
+    // 1. window.location에서 시도
+    const urlParams = new URLSearchParams(window.location.search);
+    userId = urlParams.get('user_id');
+    
+    // 2. AJAX 로드인 경우, 현재 페이지의 스크립트 태그에서 URL 추출 시도
+    if (!userId) {
+        // loadPage로 전달된 URL을 찾기 위해 약간의 지연 후 재시도
+        setTimeout(function() {
+            loadMemberData();
+        }, 100);
+    } else {
+        loadMemberData();
+    }
+    
+    function loadMemberData() {
+        // 다시 한번 URL에서 추출 시도
+        const currentUrl = window.location.href;
+        const urlMatch = currentUrl.match(/[?&]user_id=([^&]*)/);
+        if (urlMatch) {
+            userId = urlMatch[1];
+        }
+        
+        // 또는 전역 변수나 다른 방법으로 user_id를 가져올 수 있다면
+        if (!userId && typeof getCurrentUserId === 'function') {
+            userId = getCurrentUserId();
+        }
+        
+        if (userId) {
+            // 회원 상세 정보 가져오기
+            fetch('/admin/member/detailData?user_id=' + userId)
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error('서버 오류: ' + res.status);
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    if (data) {
+                        // 입력 필드에 데이터 채우기
+                        const userIdInput = document.querySelector("input[name='user_id']");
+                        const userNameInput = document.querySelector("input[name='user_name']");
+                        const userNicknameInput = document.querySelector("input[name='user_nickname']");
+                        const userEmailInput = document.querySelector("input[name='user_email']");
+                        const userPhoneInput = document.querySelector("input[name='user_phone_num']");
+                        const userAddressInput = document.querySelector("input[name='user_address']");
+                        const userDetailAddressInput = document.querySelector("input[name='user_detail_address']");
+                        
+                        if (userIdInput) userIdInput.value = data.USER_ID || '';
+                        if (userNameInput) userNameInput.value = data.USER_NAME || '';
+                        if (userNicknameInput) userNicknameInput.value = data.USER_NICKNAME || '';
+                        if (userEmailInput) userEmailInput.value = data.USER_EMAIL || '';
+                        if (userPhoneInput) userPhoneInput.value = data.USER_PHONE_NUM || '';
+                        if (userAddressInput) userAddressInput.value = data.USER_ADDRESS || '';
+                        if (userDetailAddressInput) userDetailAddressInput.value = data.USER_DETAIL_ADDRESS || '';
+                    }
+                })
+                .catch(error => {
+                    console.error('회원 정보를 불러오는 중 오류가 발생했습니다:', error);
+                });
+        }
+    }
+})();
+</script>
+
 </body>
 </html>
