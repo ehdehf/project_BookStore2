@@ -119,6 +119,13 @@ public class ProjectController {
             model.addAttribute("login_err", "존재하지 않는 아이디입니다.");
             return "login";
         }
+
+        // 탈퇴(INACTIVE) + LOCAL 계정은 로그인 불가
+        if ("INACTIVE".equals(user.getUser_role())
+                && (user.getLogin_type() == null || "LOCAL".equalsIgnoreCase(user.getLogin_type()))) {
+            model.addAttribute("login_err", "존재하지 않는 아이디입니다.");
+            return "login";
+        }
         // 로그인 실패 기록 초기화 조건 확인 (마지막 실패 후 5분 경과 시 자동 초기화)
         if (user.getLast_fail_time() != null) {
             long diffMin = (System.currentTimeMillis() - user.getLast_fail_time().getTime()) / 1000 / 60;
@@ -150,7 +157,7 @@ public class ProjectController {
                 session.setAttribute("loginDisplayName", name);
                 
                 session.setAttribute("userRole", userInfo.get("user_role"));
-
+                session.setAttribute("loginType", user.getLogin_type());
             }
 
             // 로그인 성공 후 메인으로 이동
@@ -263,6 +270,7 @@ public class ProjectController {
         if (userInfo != null) {
             String name = (String) userInfo.get("user_name");
             session.setAttribute("loginDisplayName", name);
+            model.addAttribute("userRole", userInfo.get("user_role"));
         }
 
         model.addAttribute("loginType", loginType); // JSP에서 일반/소셜 구분용
@@ -276,11 +284,18 @@ public class ProjectController {
                              HttpSession session, Model model) {
 
         String loginId = (String) session.getAttribute("loginId");
+        String userRole  = (String) session.getAttribute("userRole");
         String loginType = (String) session.getAttribute("loginType");
         String accessToken = (String) session.getAttribute("accessToken"); // ✅ 카카오 연동 해제용
 
         if (loginId == null) return "redirect:/login";
 
+        // 관리자 탈퇴 금지
+        if ("ADMIN".equalsIgnoreCase(userRole)) {
+            model.addAttribute("withdraw_err", "관리자 계정은 탈퇴할 수 없습니다.");
+            return "MyPage/withdraw";
+        }
+        
         // 소셜 로그인 회원 탈퇴 처리
         if ("KAKAO".equalsIgnoreCase(loginType)
         	||"NAVER".equalsIgnoreCase(loginType)
