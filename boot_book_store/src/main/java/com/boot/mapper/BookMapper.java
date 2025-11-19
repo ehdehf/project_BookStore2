@@ -19,4 +19,6 @@ public interface BookMapper {
 
     // 특정 장르의 도서 목록
     List<BookDTO> getBooksByGenre(@Param("genre_id") int genre_id);
+
+	List<BookDTO> recommendByBuy(String userId);
 }
