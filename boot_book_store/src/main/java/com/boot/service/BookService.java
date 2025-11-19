@@ -8,4 +8,6 @@ public interface BookService {
     List<BookDTO> getAllBooks();
     List<GenreDTO> getAllGenres();
     List<BookDTO> getBooksByGenre(int genre_id);
+    List<BookDTO> getRecommendByBuy(String userId);
+    List<BookDTO> getRandomBooks();
 }
