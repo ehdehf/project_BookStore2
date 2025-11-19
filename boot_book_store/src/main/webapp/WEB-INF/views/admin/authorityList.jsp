@@ -299,13 +299,15 @@ function updateRole(userId) {
     })
     .then(res => res.text())
     .then(result => {
+
         if (result === "REDIRECT_MAIN") {
             alert("권한 변경으로 인해 관리자 페이지에서 나갑니다.");
             location.href = "/main";
-            return;
+            return;   // 🔥 핵심: 아래 코드 실행 막기
         }
+
         alert("권한이 변경되었습니다.");
-		refreshAuthorityPage();
+        refreshAuthorityPage();  // 이건 다른 사람 권한 바꿀 때만 실행됨
     });
 }
 
@@ -320,8 +322,15 @@ function removeAdmin(userId) {
     })
     .then(res => res.text())
     .then(result => {
+
+        if (result === "REDIRECT_MAIN") {
+            alert("관리자 권한이 제거되어 메인으로 이동합니다.");
+            location.href = "/main";
+            return;   // 🔥 이거 없으면 또 관리자 페이지를 다시 불러버림
+        }
+
         alert("관리자 권한이 제거되었습니다.");
-		refreshAuthorityPage();
+        refreshAuthorityPage();
     });
 }
 function refreshAuthorityPage() {
