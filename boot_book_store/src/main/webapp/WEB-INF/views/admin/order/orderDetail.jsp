@@ -9,163 +9,171 @@
 <title>주문 상세보기</title>
 
 <style>
-    body {
-        font-family: 'Noto Sans KR', sans-serif;
-        background: #f6f7f9;
-        margin: 0;
-        padding: 0;
-    }
+	:root {
+	    --brand: #795438;
+	    --brand-dark: #6b4f34;
+	    --text: #3e2c1c;
+	    --muted: #8a7a6e;
+	    --bg: #f2eee9;
+	    --card: #ffffff;
+	    --radius: 16px;
+	    --shadow: 0 10px 25px rgba(0,0,0,.12);
+	}
 
-    .page-title {
-        font-size: 26px;
-        font-weight: 700;
-        margin: 30px 0 10px 40px;
-        color: #333;
-    }
+	body {
+	    font-family: 'Noto Sans KR', sans-serif;
+	    background: var(--bg);
+	    margin: 0;
+	    padding: 0;
+	    color: var(--text);
+	}
 
-    .wrapper {
-        width: 90%;
-        margin: 0 auto;
-    }
+	/* 페이지 제목 */
+	.page-title {
+	    font-size: 26px;
+	    font-weight: 700;
+	    margin: 30px 0 10px 40px;
+	    color: var(--text);
+	}
 
-    /* 상단 요약 카드 영역 */
-    .summary-grid {
-        display: flex;
-        gap: 20px;
-        margin-top: 20px;
-    }
+	/* 전체 래퍼 */
+	.wrapper {
+	    width: 90%;
+	    margin: 0 auto;
+	}
 
-    .summary-card {
-        flex: 1;
-        background: white;
-        padding: 22px 28px;
-        border-radius: 12px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.07);
-    }
+	/* ===== 상단 요약 카드 ===== */
+	.summary-grid {
+	    display: flex;
+	    gap: 20px;
+	    margin-top: 20px;
+	}
 
-    .summary-title {
-        font-size: 14px;
-        color: #777;
-    }
+	.summary-card {
+	    flex: 1;
+	    background: var(--card);
+	    padding: 22px 28px;
+	    border-radius: var(--radius);
+	    box-shadow: var(--shadow);
+	    border: 1px solid #e0d6cd;
+	}
 
-    .summary-value {
-        font-size: 24px;
-        font-weight: 600;
-        color: #333;
-        margin-top: 4px;
-    }
+	.summary-title {
+	    font-size: 14px;
+	    color: var(--muted);
+	}
 
-    /* 세부 박스 */
-    .section-box {
-        background: #fff;
-        margin-top: 25px;
-        padding: 25px 35px;
-        border-radius: 12px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-    }
+	.summary-value {
+	    font-size: 24px;
+	    font-weight: 700;
+	    color: var(--text);
+	    margin-top: 4px;
+	}
 
-    .section-title {
-        font-size: 18px;
-        font-weight: 600;
-        margin-bottom: 18px;
-        color: #333;
-    }
+	/* ===== 세부 정보 박스 ===== */
+	.section-box {
+	    background: var(--card);
+	    padding: 25px 35px;
+	    border-radius: var(--radius);
+	    margin-top: 25px;
+	    box-shadow: var(--shadow);
+	    border: 1px solid #e0d6cd;
+	}
 
-    .info-row {
-        display: flex;
-        margin-bottom: 12px;
-    }
+	.section-title {
+	    font-size: 18px;
+	    font-weight: 700;
+	    margin-bottom: 18px;
+	    color: var(--text);
+	}
 
-    .info-label {
-        width: 150px;
-        font-weight: 600;
-        color: #555;
-    }
+	/* 정보 행 */
+	.info-row {
+	    display: flex;
+	    margin-bottom: 12px;
+	}
+	.info-label {
+	    width: 150px;
+	    font-weight: 600;
+	    color: var(--muted);
+	}
+	.info-value {
+	    color: var(--text);
+	    flex: 1;
+	}
 
-    .info-value {
-        flex: 1;
-        color: #222;
-    }
+	/* ===== 도서 테이블 ===== */
+	table {
+	    width: 100%;
+	    border-collapse: collapse;
+	    margin-top: 10px;
+	    border-radius: 14px;
+	    overflow: hidden;
+	    background: var(--card);
+	}
 
-    /* 도서 목록 */
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 10px;
-    }
+	table th {
+	    background: var(--brand);
+	    padding: 12px;
+	    font-size: 14px;
+	    color: #fff;
+	    border-bottom: 1px solid #d3c2b4;
+	}
+	table td {
+	    padding: 12px;
+	    border-bottom: 1px solid #ede3d9;
+	    font-size: 14px;
+	    color: var(--text);
+	    background: #ffffff;
+	}
 
-    table th {
-        background: #fafafa;
-        padding: 12px;
-        font-size: 14px;
-        color: #555;
-        border-bottom: 1px solid #e3e3e3;
-    }
-
-    table td {
-        padding: 12px;
-        border-bottom: 1px solid #ececec;
-        font-size: 14px;
-        color: #333;
-    }
-
-    .book-img {
-        width: 65px;
-        height: 85px;
-        border-radius: 6px;
-        object-fit: cover;
-        border: 1px solid #ddd;
-    }
-
-    /* 버튼 */
-    .btn-back {
-        margin-top: 25px;
-        padding: 10px 20px;
-        background: #4a6fa5;
-        border: none;
-        color: white;
-        font-size: 14px;
-        border-radius: 6px;
-        cursor: pointer;
-    }
-
-    .btn-back:hover {
-        background: #3d5e8e;
-    }
-	/* 이미지 열: 가운데 */
+	/* 정렬 스타일 */
 	table td:nth-child(1),
 	table th:nth-child(1) {
 	    text-align: center;
 	}
-
-	/* 도서명: 왼쪽 */
 	table td:nth-child(2),
 	table th:nth-child(2) {
 	    text-align: left;
 	}
-
-	/* 저자: 가운데 */
 	table td:nth-child(3),
-	table th:nth-child(3) {
-	    text-align: center;
-	}
-
-	/* 수량: 가운데 */
+	table th:nth-child(3),
 	table td:nth-child(4),
 	table th:nth-child(4) {
 	    text-align: center;
 	}
-
-	/* 판매가: 오른쪽 출력이 자연스럽다 */
 	table td:nth-child(5),
-	table th:nth-child(5) {
-	    text-align: right;
-	}
-
-	/* 배송비: 오른쪽 */
+	table th:nth-child(5),
 	table td:nth-child(6),
 	table th:nth-child(6) {
 	    text-align: right;
+	}
+
+	/* 도서 이미지 */
+	.book-img {
+	    width: 65px;
+	    height: 85px;
+	    border-radius: 6px;
+	    border: 1px solid #d5c7b7;
+	    object-fit: cover;
+	}
+
+	/* ===== 뒤로가기 버튼 ===== */
+	.btn-back {
+	    margin-top: 25px;
+	    padding: 10px 20px;
+	    background: var(--brand);
+	    border: none;
+	    color: white;
+	    font-size: 14px;
+	    border-radius: 8px;
+	    cursor: pointer;
+	    font-weight: 600;
+	    transition: .25s;
+	}
+	.btn-back:hover {
+	    background: var(--brand-dark);
+	    transform: translateY(-2px);
 	}
 </style>
 </head>
