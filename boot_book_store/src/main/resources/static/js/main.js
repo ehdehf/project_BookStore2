@@ -1,23 +1,4 @@
-// 더보기 버튼
-document.addEventListener('DOMContentLoaded', function() {
-  const loadMoreBtn = document.getElementById('loadMoreBtn');
-  const additionalProducts = document.getElementById('additionalProducts');
-  if(!loadMoreBtn || !additionalProducts) return;
-  let isExpanded = false;
 
-  loadMoreBtn.addEventListener('click', function() {
-    if (!isExpanded) {
-      additionalProducts.classList.remove('hidden');
-      loadMoreBtn.textContent = '접기';
-      isExpanded = true;
-      additionalProducts.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else {
-      additionalProducts.classList.add('hidden');
-      loadMoreBtn.textContent = '더보기';
-      isExpanded = false;
-    }
-  });
-});
 
 // 책 속 한 줄: 좌우 스크롤
 (function(){
@@ -294,4 +275,193 @@ function showTyping() {
 function hideTyping() {
     const typing = document.getElementById("typing-indicator");
     if (typing) typing.remove();
+}
+
+function createCard(book) {
+  const id = book.id;
+  const title = book.title;
+  const author = book.author;
+  const price = book.price;
+  const img = book.image;
+  const priceFormatted = price.toLocaleString();
+  const detailUrl = `${ctx}/SearchDetail?book_id=${id}`;
+
+  const isLoggedIn = loginId && loginId.trim() !== "";
+  const isWished = isLoggedIn ? (wishStatusMap[id] || false) : false;
+
+  return `
+    <div class="card">
+      <div class="thumb">
+        ${img ? `<img src="${img}" alt="${title}">` : `<div class="placeholder"></div>`}
+
+        <!-- 찜 버튼 -->
+        ${isLoggedIn ? `
+          <button class="heart-btn ${isWished ? 'active' : ''}"
+                  data-book-id="${id}">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path class="heart-empty" d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78
+                7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 
+                5.5 0 0 0 0-7.78z"/>
+            </svg>
+          </button>
+        ` : ``}
+      </div>
+
+      <div class="info">
+        <h3 class="title-sm">
+          <a href="${detailUrl}" class="title-link">${title}</a>
+        </h3>
+        <p class="author">${author}</p>
+
+        <div class="info-bottom">
+          <p class="price">${priceFormatted}원</p>
+
+          <button class="cart-btn" data-book-id="${id}">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M6 6h15l-1.5 8.5a2 2 0 0 1-2 1.5H9a2 2 0 0 1-2-1.5L5 3H2"
+                    stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            담기
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+
+
+function renderRecommendedBooks() {
+  const container = document.getElementById('productsGrid');
+  container.innerHTML = recommendedBooks.map(createCard).join('');
+  
+  // 이벤트 바인딩 함수 호출 필요 (찜, 장바구니 버튼 등)
+  bindHeartButtons();
+  bindCartButtons();
+}
+
+// 초기 페이지 로드 시 실행
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadWishStatus();
+  renderRecommendedBooks();
+});
+
+// 찜 상태 맵
+let wishStatusMap = {};
+
+// 찜 상태 로드
+async function loadWishStatus() {
+  if (!loginId || loginId.trim() === "") return;
+
+  try {
+    for (let book of recommendedBooks) {
+      const bookId = book.id;
+
+      try {
+        const response = await fetch(`${ctx}/wishlist/check?book_id=${bookId}`);
+        const data = await response.json();
+        wishStatusMap[bookId] = data.wished || false;
+      } catch (e) {
+        wishStatusMap[bookId] = false;
+      }
+    }
+  } catch (e) {
+    console.error("찜 상태 로드 실패:", e);
+  }
+}
+
+function bindHeartButtons() {
+  document.querySelectorAll(".heart-btn").forEach(btn => {
+    btn.onclick = null;
+    btn.addEventListener("click", async function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      if (!loginId || loginId.trim() === "") {
+        alert("로그인 후 이용해주세요.");
+        window.location.href = `${ctx}/login`;
+        return;
+      }
+
+      const bookId = parseInt(this.dataset.bookId);
+      const isActive = this.classList.contains('active');
+
+      if (isActive) {
+        if (!confirm('이 상품을 찜 목록에서 삭제하시겠습니까?')) return;
+      } else {
+        if (!confirm('이 상품을 찜 하시겠습니까?')) return;
+      }
+
+      try {
+        let response;
+        if (isActive) {
+          response = await fetch(`${ctx}/wishlist/remove`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+            body: `book_id=${bookId}`
+          });
+        } else {
+          response = await fetch(`${ctx}/wishlist/add`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+            body: `book_id=${bookId}`
+          });
+        }
+
+        const data = await response.json();
+
+        if (data.success) {
+          if (isActive) {
+            this.classList.remove('active');
+            wishStatusMap[bookId] = false;
+            alert('찜 목록에서 삭제되었습니다.');
+          } else {
+            this.classList.add('active');
+            wishStatusMap[bookId] = true;
+            alert('찜 목록에 추가되었습니다.');
+          }
+        }
+      } catch (err) {
+        console.error("찜 처리 오류:", err);
+        alert('네트워크 오류가 발생했습니다.');
+      }
+    });
+  });
+}
+
+function bindCartButtons() {
+  document.querySelectorAll(".cart-btn").forEach(btn => {
+    btn.onclick = null;
+    btn.addEventListener("click", function() {
+      const bookId = this.dataset.bookId;
+
+      if (!loginId || loginId.trim() === "") {
+        alert("로그인 후 이용해주세요.");
+        window.location.href = `${ctx}/login`;
+        return;
+      }
+
+      if (!confirm("장바구니에 담으시겠습니까?")) return;
+
+      fetch(`${ctx}/cartAdd`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+        body: `book_id=${encodeURIComponent(bookId)}`
+      })
+      .then(res => res.text())
+      .then(data => {
+        const msg = data.trim();
+        if(msg === "success"){
+          alert("장바구니에 담겼습니다!");
+        } else {
+          alert(msg);
+        }
+      })
+      .catch(err => {
+        console.error("Fetch 에러:", err);
+        alert("장바구니 담기 실패");
+      });
+    });
+  });
 }
