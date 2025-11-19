@@ -119,49 +119,52 @@
         </div>
       </div>
     </div>
-  </div>
 
   <!-- 도서 상세 정보 -->
-  <div class="book-details-section">
-    <h3>도서 상세 정보</h3>
-    <div class="book-details-grid">
-      <div class="book-detail-item">
-        <span class="detail-label">저자</span><span class="detail-value"><c:out value="${book.book_writer}" /></span>
-      </div>
-      <div class="book-detail-item">
-        <span class="detail-label">출판사</span><span class="detail-value"><c:out value="${book.book_pub}" /></span>
-      </div>
-      <div class="book-detail-item">
-        <span class="detail-label">출간일</span>
-        <span class="detail-value">
-          <c:choose>
-            <c:when test="${not empty book.book_date}">
-              <fmt:formatDate value="${book.book_date}" pattern="yyyy-MM-dd" />
-            </c:when>
-            <c:otherwise>정보 없음</c:otherwise>
-          </c:choose>
-        </span>
-      </div>
-      <div class="book-detail-item">
-        <span class="detail-label">ISBN</span><span class="detail-value mono"><c:out value="${book.book_isbn}" /></span>
-      </div>
-      <div class="book-detail-item">
-        <span class="detail-label">장르</span>
-        <span class="detail-value">
-          <span class="badge-genre">
-            <c:choose>
-              <c:when test="${book.genre_id == 1}">소설</c:when>
-              <c:when test="${book.genre_id == 2}">에세이</c:when>
-              <c:when test="${book.genre_id == 3}">인문/사회</c:when>
-              <c:when test="${book.genre_id == 4}">과학/기술</c:when>
-              <c:when test="${book.genre_id == 5}">경제/경영</c:when>
-              <c:otherwise>기타</c:otherwise>
-            </c:choose>
-          </span>
-        </span>
-      </div>
-    </div>
-  </div>
+  			<div class="book-details-section">
+  				<h3>도서 상세 정보</h3>
+  				<div class="book-details-grid">
+  					<div class="book-detail-item">
+  						<span class="detail-label">저자</span><span class="detail-value"><c:out
+  								value="${book.book_writer}" /></span>
+  					</div>
+  					<div class="book-detail-item">
+  						<span class="detail-label">출판사</span><span class="detail-value"><c:out
+  								value="${book.book_pub}" /></span>
+  					</div>
+
+  					<div class="book-detail-item">
+  						<span class="detail-label">출간일</span> <span class="detail-value">
+  							<c:choose>
+  								<c:when test="${not empty book.book_date}">
+  									<fmt:formatDate value="${book.book_date}" pattern="yyyy-MM-dd" />
+  								</c:when>
+  								<c:otherwise>정보 없음</c:otherwise>
+  							</c:choose>
+  						</span>
+  					</div>
+
+  					<div class="book-detail-item">
+  						<span class="detail-label">ISBN</span> <span
+  							class="detail-value mono"><c:out value="${book.book_isbn}" /></span>
+  					</div>
+
+  					<div class="book-detail-item">
+  						<span class="detail-label">장르</span> <span class="detail-value">
+  							<span class="badge-genre"> <c:choose>
+  									<c:when test="${book.genre_id == 1}">소설</c:when>
+  									<c:when test="${book.genre_id == 2}">에세이</c:when>
+  									<c:when test="${book.genre_id == 3}">인문/사회</c:when>
+  									<c:when test="${book.genre_id == 4}">과학/기술</c:when>
+  									<c:when test="${book.genre_id == 5}">경제/경영</c:when>
+  									<c:otherwise>기타</c:otherwise>
+  								</c:choose>
+  						</span>
+  						</span>
+  					</div>
+  				</div>
+  			</div>
+
 
   <!-- 리뷰 작성 -->
   <div class="review-write-section">
