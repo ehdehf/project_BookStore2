@@ -1,7 +1,7 @@
 <div align="center">
 
-# 📚 온라인 북스토어(BookShelf)  
-### Spring Boot · MyBatis · MySQL 기반 온라인 도서 판매 플랫폼
+# 📚 온라인 북스토어(책갈피)  
+### Spring Boot · MyBatis · Oracle 기반 온라인 도서 판매 플랫폼
 
 <br>
 
