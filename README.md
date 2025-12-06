@@ -51,7 +51,7 @@
 | 분야 | 기술 |
 |------|-------|
 | **Frontend** | <img src="https://img.shields.io/badge/html5-E34F26?style=flat-square&logi=html5&logoColor=white">, <img src="https://img.shields.io/badge/css-663399?style=flat-square&logi=html5&logoColor=white">, <img src="https://img.shields.io/badge/javascript-F7DF1E?style=flat-square&logi=html5&logoColor=white">, <img src="https://img.shields.io/badge/jquery-0769AD?style=flat-square&logi=html5&logoColor=white"> |
-| **Backend** | <img src="https://img.shields.io/badge/jsp-FF4000?style=flat-square&logi=html5&logoColor=white">, <img src="https://img.shields.io/badge/jquery-0769AD?style=flat-square&logi=html5&logoColor=white">Java, <img src="https://img.shields.io/badge/jquery-0769AD?style=flat-square&logi=html5&logoColor=white">Spring Boot, <img src="https://img.shields.io/badge/jquery-0769AD?style=flat-square&logi=html5&logoColor=white">Lombok, <img src="https://img.shields.io/badge/jquery-0769AD?style=flat-square&logi=html5&logoColor=white">MyBatis |
+| **Backend** | <img src="https://img.shields.io/badge/Jsp-FF4000?style=flat-square&logi=html5&logoColor=white">, <img src="https://img.shields.io/badge/Java-F7DF1E?style=flat-square&logi=html5&logoColor=white">, <img src="https://img.shields.io/badge/springboot-6DB33F?style=flat-square&logi=html5&logoColor=white">, <img src="https://img.shields.io/badge/Lombok-4285F4?style=flat-square&logi=html5&logoColor=white">, <img src="https://img.shields.io/badge/MyBatis-006600?style=flat-square&logi=html5&logoColor=white"> |
 | **Database** | Oracle Database |
 | **Infra / Server** | Apache Tomcat, GitHub |
 | **API / External Services** | Toss Payments API, Google Gemini API |
