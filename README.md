@@ -137,7 +137,7 @@
 ## 🗂 ERD 및 테이블 명세서
 
 📄 ERD  
-👉 <details> <summary><strong>ERD 다이어그램</strong></summary>
+<details> <summary><strong>ERD 다이어그램</strong></summary>
 
 📸 스크린샷
 
