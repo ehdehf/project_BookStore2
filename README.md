@@ -255,30 +255,6 @@ OAuth2 인증 코드 요청 → 토큰 발급 → 사용자 정보 조회
 (이미지)
 
 </details>
-⚙ 기타 기능
-<details> <summary><strong>세션 기반 인증 처리</strong></summary>
-📌 설명
-
-사용자 타입별 권한 분기 처리
-
-세션 만료 처리 적용
-
-📸 스크린샷
-
-(이미지)
-
-</details> <details> <summary><strong>페이징 & 검색 기능(일부)</strong></summary>
-📌 설명
-
-MyBatis 기반 페이징 처리
-
-검색 조건 조합 가능하게 구현
-
-📸 스크린샷
-
-(이미지)
-
-</details>
 
 ---
 
