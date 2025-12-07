@@ -146,23 +146,174 @@
 
 ## 🔍 핵심 구현 내용 (내가 담당한 기능)
 
-### ✔ 1. 결제 모듈(Toss Payments) 구현
-- 클라이언트 → Toss 위젯 → 승인 API까지 전체 흐름 설계
-- 결제 성공 시 주문/주문상세 DB 트랜잭션 처리  
-- 실패 시 롤백 적용
+🔐 회원 / 인증 기능
+<details> <summary><strong>회원가입 / 로그인 / 로그아웃</strong></summary>
+📌 설명
 
-### ✔ 2. 장바구니 기능 (세션/DB 혼합 방식)
-- 비로그인 상태에서도 장바구니 유지되도록 세션 로직 구현  
-- 로그인 시 장바구니 DB로 병합 처리 로직 개발
+Spring Security 없이 세션 기반 인증 구현
 
-### ✔ 3. 주문/결제 트랜잭션 처리
-- 주문 생성과 결제 처리를 하나의 트랜잭션으로 관리  
-- 재고 부족 시 예외 처리 및 자동 롤백
+로그인/로그아웃 전체 흐름 설계
 
-### ✔ 4. 관리자 페이지 기능 개발
-- 도서 등록/수정/삭제  
-- 이미지 업로드 처리  
-- 재고 변경 API
+유효성 검사 + 예외 처리 적용
+
+📸 스크린샷
+
+(여기에 이미지 삽입)
+
+</details> <details> <summary><strong>소셜 로그인(Kakao / Naver / Google)</strong></summary>
+📌 설명
+
+OAuth2 인증 코드 요청 → 토큰 발급 → 사용자 정보 조회
+
+신규 사용자 자동 DB 등록
+
+기존 계정 연동 처리
+
+📸 스크린샷
+
+(이미지)
+
+</details> <details> <summary><strong>아이디·비밀번호 찾기</strong></summary>
+📌 설명
+
+이메일 인증번호 발송
+
+비밀번호 재설정 로직 구현
+
+📸 스크린샷
+
+(이미지)
+
+</details> <details> <summary><strong>마이페이지(회원 정보 조회 / 수정 / 삭제)</strong></summary>
+📌 설명
+
+회원 정보 수정
+
+비밀번호 변경
+
+탈퇴 처리
+
+📸 스크린샷
+
+(이미지)
+
+</details> <details> <summary><strong>탈퇴 회원 관리</strong></summary>
+📌 설명
+
+상태값 변경 방식(DELETE X → STATUS 변경)
+
+관리자 페이지에서 조회/관리 가능
+
+📸 스크린샷
+
+(이미지)
+
+</details>
+🛠 관리자 기능
+<details> <summary><strong>공지사항 게시판 CRUD</strong></summary>
+📌 설명
+
+관리자 권한 전용 게시판
+
+작성/수정/삭제/조회 + 첨부 파일 지원 가능 구조
+
+📸 스크린샷
+
+(이미지)
+
+</details> <details> <summary><strong>사용자 게시판 관리</strong></summary>
+📌 설명
+
+사용자 게시글 모니터링 및 삭제
+
+신고 기능 염두에 둔 확장성 있는 구조 설계
+
+📸 스크린샷
+
+(이미지)
+
+</details> <details> <summary><strong>주문 관리(주문 리스트 / 주문 상세)</strong></summary>
+📌 설명
+
+주문 테이블 + 상세 테이블 조인 조회
+
+배송 상태 관리 등 확장 가능 구조 설계
+
+📸 스크린샷
+
+(이미지)
+
+</details> <details> <summary><strong>탈퇴 회원 관리</strong></summary>
+📌 설명
+
+관리자 페이지에서 탈퇴 회원 조회
+
+계정 상태값 기반 필터링 처리
+
+📸 스크린샷
+
+(이미지)
+
+</details>
+💬 커뮤니티 기능
+<details> <summary><strong>공지사항 조회</strong></summary>
+📌 설명
+
+사용자 화면 전용 조회 페이지
+
+조회수 증가 로직 포함
+
+📸 스크린샷
+
+(이미지)
+
+</details> <details> <summary><strong>1:1 문의 등록 기능(일부 담당)</strong></summary>
+📌 설명
+
+사용자 문의 폼 처리
+
+문의 내역 저장
+
+📸 스크린샷
+
+(이미지)
+
+</details>
+⚙ 기타 기능
+<details> <summary><strong>세션 기반 인증 처리</strong></summary>
+📌 설명
+
+사용자 타입별 권한 분기 처리
+
+세션 만료 처리 적용
+
+📸 스크린샷
+
+(이미지)
+
+</details> <details> <summary><strong>페이징 & 검색 기능(일부)</strong></summary>
+📌 설명
+
+MyBatis 기반 페이징 처리
+
+검색 조건 조합 가능하게 구현
+
+📸 스크린샷
+
+(이미지)
+
+</details> <details> <summary><strong>AWS EC2 배포</strong></summary>
+📌 설명
+
+Ubuntu + Nginx + Tomcat 기반 배포
+
+포트 포워딩 / 보안그룹 설정 / 서비스 구동
+
+📸 스크린샷
+
+(이미지)
+
+</details>
 
 ---
 
