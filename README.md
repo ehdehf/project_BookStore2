@@ -150,113 +150,81 @@
 
 ## 🔍 핵심 구현 내용 (내가 담당한 기능)
 
-🔐 회원 / 인증 기능
-<details> <summary><strong>회원가입 / 로그인 / 로그아웃</strong></summary>
+🛠 관리자 기능
+<details> <summary><strong>관리자 로그인 / 관리자 홈 진입 로직 구현</strong></summary>
+
 📌 설명
 
-Spring Security 없이 세션 기반 인증 구현
+일반 사용자와 분리된 관리자 전용 로그인 흐름 구현
 
-로그인/로그아웃 전체 흐름 설계
+로그인 시 user_role 값 기반으로 관리자 여부 판단
+→ 관리자 로그인 성공 시 adminMain.jsp로 이동
+→ 일반 회원은 사용자 메인 페이지로 이동
 
-유효성 검사 + 예외 처리 적용
+로그인 실패 횟수(5회 제한) + 30초 정지 로직 직접 구현
+
+세션 기반 관리자 인증 체계(loginId, userRole) 설계
+
+관리자 페이지는 새 창 이동이 아니라 내부 fetch 로딩 방식으로 구성하여 UI 일관성 유지
 
 📸 스크린샷
-
 (여기에 이미지 삽입)
 
-</details> <details> <summary><strong>소셜 로그인(Kakao / Naver / Google)</strong></summary>
+</details>
+<details> <summary><strong>관리자 회원 관리 기능 전체 구현</strong></summary>
+
 📌 설명
 
-OAuth2 인증 코드 요청 → 토큰 발급 → 사용자 정보 조회
+관리자 페이지 내부에서 회원 목록, 상세 조회, 수정, 삭제까지 모든 흐름 완성
 
-신규 사용자 자동 DB 등록
+MyBatis를 사용하여 ADMIN을 제외한 일반 사용자 목록만 조회하도록 구현
 
-기존 계정 연동 처리
+상세 페이지는 /detail로 JSP를 로드하고, 실제 데이터는 AJAX(/detailData)로 다시 채워 넣는 방식으로 구성
 
-📸 스크린샷
+수정 기능은 JSON 기반 비동기 요청으로 처리 → 수정 후 목록 자동 갱신
 
-(이미지)
+삭제 기능도 AJAX 기반으로 수행하고 리스트 자동 재로드
 
-</details> <details> <summary><strong>아이디·비밀번호 찾기</strong></summary>
-📌 설명
-
-이메일 인증번호 발송
-
-비밀번호 재설정 로직 구현
+콘텐츠는 모두 adminMain.jsp 내부 영역(content-area) 에 로딩되도록 설계
 
 📸 스크린샷
-
-(이미지)
-
-</details> <details> <summary><strong>탈퇴 회원 관리</strong></summary>
-📌 설명
-
-상태값 변경 방식(DELETE X → STATUS 변경)
-
-관리자 페이지에서 조회/관리 가능
-
-📸 스크린샷
-
-(이미지)
+(여기에 이미지 삽입)
 
 </details>
-🛠 관리자 기능
-<details> <summary><strong>공지사항 게시판 CRUD</strong></summary>
+<details> <summary><strong>관리자 권한 부여 / 권한 삭제</strong></summary>
+
 📌 설명
 
-관리자 권한 전용 게시판
+사용자 user_role 값을 직접 수정하여 관리자 권한 부여/해제 기능 구현
 
-작성/수정/삭제/조회 + 첨부 파일 지원 가능 구조
+권한 변경 시 세션과 프론트 UI에 즉시 반영되도록 처리
 
-📸 스크린샷
+관리자 권한 보안 문제 방지를 위해 모든 변경 요청은 단일 API에서만 처리
 
-(이미지)
-
-</details> <details> <summary><strong>사용자 게시판 관리</strong></summary>
-📌 설명
-
-사용자 게시글 모니터링 및 삭제
-
-신고 기능 염두에 둔 확장성 있는 구조 설계
+이후 프론트 팀원이 확장할 수 있도록 자유도가 높은 구조로 설계
 
 📸 스크린샷
-
-(이미지)
-
-</details> <details> <summary><strong>주문 관리(주문 리스트 / 주문 상세)</strong></summary>
-📌 설명
-
-주문 테이블 + 상세 테이블 조인 조회
-
-배송 상태 관리 등 확장 가능 구조 설계
-
-📸 스크린샷
-
-(이미지)
-
-</details> <details> <summary><strong>탈퇴 회원 관리</strong></summary>
-📌 설명
-
-관리자 페이지에서 탈퇴 회원 조회
-
-계정 상태값 기반 필터링 처리
-
-📸 스크린샷
-
-(이미지)
+(여기에 이미지 삽입)
 
 </details>
-💬 커뮤니티 기능
-<details> <summary><strong>공지사항 조회</strong></summary>
+<details> <summary><strong>도서 등록 / 수정 / 삭제 기능</strong></summary>
+
 📌 설명
 
-사용자 화면 전용 조회 페이지
+관리자 페이지에서 도서 CRUD(등록·수정·삭제) 전부 구현
 
-조회수 증가 로직 포함
+도서 정보 입력 후 DB Insert 처리
+
+도서 상세 정보 조회 후 Update 가능
+
+Fetch 기반 비동기 방식으로 동작하도록 구현되어 adminMain 내에서 화면 전환 없이 처리됨
+
+도서 삭제 시 즉시 리스트 갱신되도록 구성
+
+이미지 업로드도 확장 가능하도록 구조 설계
 
 📸 스크린샷
-
-(이미지)
+(여기에 이미지 삽입)
 
 </details>
 
