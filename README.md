@@ -160,8 +160,10 @@
 🔍 핵심 구현 내용 (내가 담당한 기능)
 
 🛠 관리자 기능
+
 🔐 관리자 로그인 / 관리자 홈 진입 로직 구현
 <details> <summary><strong>관리자 로그인 / 관리자 홈 진입 로직 구현</strong></summary> <div align="center"> <img src="bookstore_png/loginadmin.png" width="700"/> <br> <sub>▲ 관리자 전용 로그인 화면</sub> </div>
+      
 📌 설명
 
 일반 사용자와 분리된 관리자 인증/인가 로직을 직접 구현했습니다.
