@@ -157,105 +157,101 @@
 
 ---
 
-## 🔍 핵심 구현 내용 (내가 담당한 기능)
+🔍 핵심 구현 내용 (내가 담당한 기능)
 
 🛠 관리자 기능
-<details> <summary><strong>관리자 로그인 / 관리자 홈 진입 로직 구현</strong></summary>
+
+🔐 관리자 로그인 / 관리자 홈 진입 로직 구현
+<details> <summary><strong>관리자 로그인 / 관리자 홈 진입 로직 구현</strong></summary> <div align="center"> <img src="bookstore_png/loginadmin.png" width="700"/> <br> <sub>▲ 관리자 전용 로그인 화면</sub> </div>
 
 📌 설명
 
-일반 사용자와 분리된 관리자 인증/인가 로직 직접 구현
+일반 사용자와 분리된 관리자 인증/인가 로직을 직접 구현했습니다.
 
-로그인 시 user_role 검사하여
+로그인 시 user_role 검사
 → ADMIN이면 관리자 메인(adminMain.jsp)으로 이동
 → 일반 회원이면 사용자 메인으로 이동
 
 로그인 실패 5회 제한 + 30초 잠금 기능 구현
 
-세션 기반 관리자 인증 구조 (loginId, userRole) 설계
+세션 기반 관리자 인증 구조(loginId, userRole) 설계
 
 관리자 전용 메뉴 접근 시 세션 체크로 보안 강화
 
-화면 이동은 페이지 전체 새로고침이 아닌 fetch 기반 비동기 페이지 로드 방식 적용
-
-📸 스크린샷
-(이미지 추가 예정)
+화면 이동은 전체 새로고침이 아닌 fetch 기반 비동기 페이지 로드 방식 적용
 
 </details>
-<details> <summary><strong>관리자 페이지 프론트엔드 전체 구조 개발</strong></summary>
+🧱 관리자 페이지 프론트엔드 전체 구조 개발
+<details> <summary><strong>관리자 페이지 프론트엔드 전체 구조 개발</strong></summary> <div align="center"> <img src="bookstore_png/adminpage.png" width="900"/> <br> <sub>▲ 관리자 대시보드 전체 레이아웃 구조</sub> </div>
 
 📌 설명
 
-관리자 대시보드 전체 UI를 직접 설계 및 구현
+관리자 대시보드 전체 UI를 직접 설계 및 구현했습니다.
 
-사이드바(회원관리/게시판관리/도서관리/주문관리 등) + 상단바 구성
+사이드바(회원관리 / 게시판관리 / 도서관리 / 주문관리 등) + 상단바 구성
 
-모든 화면 전환이 새 페이지가 아니라
-→ adminMain.jsp 내부 content-area로 동적 로딩되는 SPA-like 구조로 제작
+모든 화면 전환을 새 페이지가 아닌
+→ adminMain.jsp 내부 content-area로 동적 로딩하는 SPA-like 구조로 제작
 
-fetch() 기반 페이지 로더(loadPage) 직접 작성
+fetch() 기반 페이지 로더(loadPage) 직접 구현
 
-각 세부 관리 페이지(memberList, memberDetail 등)도
-관리자 메인 레이아웃 안에서 자연스럽게 전환되도록 구현
+각 관리 페이지가 관리자 메인 레이아웃 안에서 자연스럽게 전환되도록 설계
 
-팀원 프론트와 충돌 없이 연동할 수 있도록 컴포넌트 구조 최적화
-
-📸 스크린샷
-(이미지 추가 예정)
+팀원 프론트 코드와 충돌 없이 연동 가능하도록 구조 최적화
 
 </details>
-<details> <summary><strong>관리자 회원 관리 기능 전체 구현</strong></summary>
+👥 관리자 회원 관리 기능 전체 구현
+<details> <summary><strong>관리자 회원 관리 기능 전체 구현</strong></summary> <div align="center"> <img src="bookstore_png/adminpage2.png" width="900"/> <br> <sub>▲ 관리자 회원 목록 및 상세 관리 화면</sub> </div>
 
 📌 설명
 
-회원 목록 조회(ADMIN 제외), 상세 보기, 수정, 삭제 모든 흐름 개발
+회원 관리 전반의 흐름을 모두 구현했습니다.
 
-상세 페이지는 JSP 로드 후 AJAX로 다시 데이터 로딩하는 하이브리드 구조
+회원 목록 조회(ADMIN 제외), 상세 조회, 수정, 삭제 기능 구현
 
-수정은 JSON 기반 비동기 방식 → 성공 시 리스트 자동 갱신
+상세 페이지는 JSP 로드 후 AJAX로 데이터 재조회하는 하이브리드 구조
 
-삭제 후에도 리스트를 즉시 새로 불러오도록 처리
+수정은 JSON 기반 비동기 처리 → 성공 시 리스트 자동 갱신
 
-화면 이동 없이 adminMain 내부에서 모든 관리 기능 실행 가능하도록 구현
+삭제 후에도 목록이 즉시 새로고침되도록 처리
 
-MyBatis 연동 mapper, controller, service 전체 흐름 작성
+화면 이동 없이 adminMain 내부에서 모든 관리 기능 수행
 
-📸 스크린샷
-(이미지 추가 예정)
+MyBatis 기반 mapper → service → controller 전체 흐름 직접 작성
 
 </details>
-<details> <summary><strong>관리자 권한 관리(권한 부여 / 삭제)</strong></summary>
+🛡 관리자 권한 관리 (권한 부여 / 삭제)
+<details> <summary><strong>관리자 권한 관리(권한 부여 / 삭제)</strong></summary> <div align="center"> <img src="bookstore_png/adminpage3.png" width="900"/> <br> <sub>▲ 관리자 권한 부여 및 해제 관리 화면</sub> </div>
 
 📌 설명
 
-user_role 변경을 통한 관리자 권한 추가/해제 기능 구현
+관리자 권한을 안전하게 제어할 수 있도록 구현했습니다.
 
-잘못된 권한 변경을 방지하도록 단일 API에서만 처리
+user_role 변경을 통한 관리자 권한 추가 / 해제 기능
+
+잘못된 권한 변경을 방지하기 위해 단일 API로만 처리
 
 권한 변경 시 프론트 UI 자동 반영
 
-추후 관리자 세부 권한 확장(메뉴 제한 등)이 가능하도록 구조화
-
-📸 스크린샷
-(이미지 추가 예정)
+추후 관리자 세부 권한 확장(메뉴별 접근 제한 등)을 고려한 구조 설계
 
 </details>
-<details> <summary><strong>도서 등록 / 수정 / 삭제 (CRUD) 기능 개발</strong></summary>
+📚 도서 등록 / 수정 / 삭제 (CRUD) 기능 개발
+<details> <summary><strong>도서 등록 / 수정 / 삭제 (CRUD) 기능 개발</strong></summary> <div align="center"> <img src="bookstore_png/adminpage_book1.png" width="32%"/> <img src="bookstore_png/adminpage_book2.png" width="32%"/> <img src="bookstore_png/adminpage4.png" width="32%"/> <br> <sub>▲ 도서 등록 · 수정 · 목록 관리 화면</sub> </div>
 
 📌 설명
 
-도서 등록, 수정, 삭제 기능 전체 구현
+도서 관리 기능을 관리자 화면 내부에서 모두 처리할 수 있도록 구현했습니다.
+
+도서 등록 / 수정 / 삭제 기능 전체 구현
 
 도서 상세 페이지에서 바로 수정 가능하도록 설계
 
-JSON 비동기 요청 기반으로 adminMain 내부에서 처리
+JSON 기반 비동기 요청으로 adminMain 내부에서 처리
 
-기존 도서 목록 자동 갱신
+처리 후 도서 목록 자동 갱신
 
-이미지 업로드/재고 관리 확장 가능 구조로 설계
-
-📸 스크린샷
-(이미지 추가 예정)
+이미지 업로드, 재고 관리 기능 확장이 가능하도록 구조 설계
 
 </details>
 
